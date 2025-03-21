@@ -97,11 +97,12 @@ const AddAmt = () => {
     };
 
     const COLORS = {
-        food: '#ff7390',
-        bills: '#5dc7c7',
-        entertainment: '#ffd368',
-        transport: '#4aaced',
-        others: '#a276ff'
+        food: '#ED213A',
+        bills: '#606c88',
+        entertainment: '#56CCF2',
+        transport: '#FDC830',
+        others: '#302b63',
+        lifestyle: '#00FF00' 
     };
 
     const data = expenses.reduce((acc, expense) => {
@@ -130,7 +131,7 @@ const AddAmt = () => {
 
     return (
         <Fragment>
-           <section className='bothAmt'>
+           <section className='bothAmt'>   
                 <aside className='data-feed addAmt'>
                     <p>Wallet Balance: <strong>&#8377;{walletBalance}</strong></p>
                     <button className='amt-btn btn-add' onClick={handleOpenIncomeModal}>Add Income</button>

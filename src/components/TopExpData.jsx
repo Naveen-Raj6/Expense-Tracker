@@ -2,6 +2,7 @@ import React, { Fragment, useContext, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { ExpenseContext } from '../context/ContextAPI';
 import { FaUtensils, FaReceipt, FaFilm, FaCar, FaQuestion, FaTools, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaChildReaching } from 'react-icons/fa6';
 
 const TopExpData = () => {
     const { expenses, deleteExpense, handleOpenExpenseModal, setEditingExpense } = useContext(ExpenseContext);
@@ -19,11 +20,12 @@ const TopExpData = () => {
     }, []);
 
     const COLORS = {
-        food: '#ff7390',
-        bills: '#5dc7c7',
-        entertainment: '#ffd368',
-        transport: '#4aaced',
-        others: '#a276ff'
+        food: '#ED213A',
+        bills: '#606c88',
+        entertainment: '#56CCF2',
+        transport: '#FDC830',
+        others: '#302b63',
+        lifestyle: '#00FF00' 
     };
 
     const CustomTooltip = ({ active, payload }) => {
@@ -47,15 +49,17 @@ const TopExpData = () => {
     const getCategoryIcon = (category) => {
         switch (category) {
             case 'food':
-                return <FaUtensils color='#ff7390' />;
+                return <FaUtensils color={COLORS.food} />;
             case 'bills':
-                return <FaReceipt color='#5dc7c7' />;
+                return <FaReceipt color={COLORS.bills} />;
             case 'entertainment':
-                return <FaFilm color='#ffd368' />;
+                return <FaFilm color={COLORS.entertainment} />;
             case 'transport':
-                return <FaCar color='#4aaced' />;
+                return <FaCar color={COLORS.transport} />;
             case 'others':
-                return <FaTools color='#a276ff' />;
+                return <FaTools color={COLORS.others} />;
+            case 'lifestyle':
+                return <FaChildReaching color={COLORS.lifestyle} />;
             default:
                 return <FaQuestion color='#000' />;
         }
