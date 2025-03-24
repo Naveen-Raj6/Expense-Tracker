@@ -333,10 +333,12 @@ h2{
 }
 .pagination {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 0.5rem;
     margin-top: 10px;
-    /* border: red 3px solid ; */
+    /* border: 2px solid #007bff; */
 }
 
 .pagination button {
@@ -346,7 +348,6 @@ h2{
     background-color: #f0f0f0;
     cursor: pointer;
     border-radius: 5px;
-    /* margin-top: 0.5rem; */
 }
 
 .pagination button.active {
@@ -357,6 +358,35 @@ h2{
 .pagination button:disabled {
     background-color: #e0e0e0cb;
     cursor: not-allowed;
+}
+
+.pagination input {
+    /* padding: 0.5rem; */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 7rem;
+    text-align: center;
+    /* margin-left: 0.5rem; */
+}
+
+.pagination .search-button {
+    padding: 0.5rem ;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination .search-button:hover {
+    background-color: #0056b3;
+}
+
+/* Ensure the search field and button are aligned with other buttons */
+.pagination input,
+.pagination .search-button {
+    margin-top: 0; /* Align with other buttons */
 }
 
 @media screen and (min-width:768px) and (max-width:971px) {
@@ -496,5 +526,17 @@ h2{
     }
     .recharts-legend-wrapper {
         top:15rem;
+    }
+}
+
+@media screen and (min-width:350px) and (max-width:450px) {
+    .expense-data{
+        flex-direction: column;
+        height: 90vh;
+        width: 92vw;
+        /* padding: 1rem; */
+        gap: 0rem;
+        margin-bottom: 1rem;
+        /* border: #007bff 2px solid; */
     }
 }

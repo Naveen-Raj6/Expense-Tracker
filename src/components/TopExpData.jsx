@@ -1,11 +1,15 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { ExpenseContext } from '../context/ContextAPI';
+import { useTranslation } from 'react-i18next';
 import { FaUtensils, FaReceipt, FaFilm, FaCar, FaQuestion, FaTools, FaEdit, FaTrash, FaHeartbeat, FaBook } from 'react-icons/fa';
 
 const TopExpData = () => {
+    const { t, i18n } = useTranslation();
+    const currencySymbol = i18n.language === 'ta' ? '₹' : '$';
     const { expenses, deleteExpense, handleEditExpenseModal } = useContext(ExpenseContext);
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchPage, setSearchPage] = useState('');
     const itemsPerPage = 3;
 
     const data = expenses.reduce((acc, expense) => {
@@ -23,7 +27,7 @@ const TopExpData = () => {
         bills: '#606c88',
         entertainment: '#56CCF2',
         transport: '#FDC830',
-        '(U,G,S,O)': 'blue', 
+        '(U,G,S,O)': 'blue',
         healthcare: '#8A2BE2',
         education: '#FFD700'
     };
@@ -32,7 +36,7 @@ const TopExpData = () => {
         if (active && payload && payload.length) {
             return (
                 <div className="custom-tooltip" style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px' }}>
-                    <p className="label">{`${payload[0].payload.name} : ₹${payload[0].payload.amount}`}</p>
+                    <p className="label">{`${t(payload[0].payload.name)} : ${currencySymbol}${payload[0].payload.amount}`}</p>
                 </div>
             );
         }
@@ -41,6 +45,16 @@ const TopExpData = () => {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+    };
+
+    const handleSearchPage = () => {
+        const page = parseInt(searchPage, 10);
+        if (page >= 1 && page <= Math.ceil(expenses.length / itemsPerPage)) {
+            setCurrentPage(page);
+        } else {
+            alert(t('invalidPageNumber'));
+        }
+        setSearchPage('');
     };
 
     const totalPages = Math.ceil(expenses.length / itemsPerPage);
@@ -90,13 +104,33 @@ const TopExpData = () => {
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
+        return new Date(dateString).toLocaleDateString(i18n.language, options);
     };
+
+    function getSmartPagination(currentPage, totalPages) {
+        const pagination = [];
+        pagination.push(1);
+        if (currentPage <= 2) {
+            if (totalPages > 2) pagination.push(2);
+            if (totalPages > 3) pagination.push("...");
+        } else if (currentPage >= totalPages - 1) {
+            pagination.push("...");
+            if (totalPages > 2) pagination.push(totalPages - 1);
+        } else {
+            pagination.push("...");
+            pagination.push(currentPage - 1);
+            pagination.push(currentPage);
+            pagination.push(currentPage + 1);
+            pagination.push("...");
+        }
+        if (totalPages > 1) pagination.push(totalPages);
+        return pagination;
+    }
 
     return (
         <Fragment>
             <section className='recent-expenses'>
-                <h2 style={{textAlign:"left"}}>Recent Transactions</h2>
+                <h2 style={{ textAlign: "left" }}>{t('recentTransactions')}</h2>
                 {currentExpenses.length > 0 ? (
                     <main id='expense-list'>
                         {currentExpenses.map((expense, index) => (
@@ -107,12 +141,12 @@ const TopExpData = () => {
                                     </div>
                                     <div className='expense-details'>
                                         <article>{expense.title}</article>
-                                        <p style={{fontSize:"0.8rem",color:"gray"}}>{formatDate(expense.date)}</p>
+                                        <p style={{ fontSize: "0.8rem", color: "gray" }}>{formatDate(expense.date)}</p>
                                     </div>
                                 </aside>
                                 <aside className='ExpEditDel'>
-                                    <b>₹{expense.amount}</b>
-                                    <button style={{background:"rgb(248, 93, 15)"}} onClick={() => handleEdit(expense)}><FaEdit /></button>
+                                    <b>{currencySymbol}{expense.amount}</b>
+                                    <button style={{ background: "rgb(248, 93, 15)" }} onClick={() => handleEdit(expense)}><FaEdit /></button>
                                     <button onClick={() => handleDelete(expense.id)}><FaTrash /></button>
                                 </aside>
                             </div>
@@ -120,48 +154,70 @@ const TopExpData = () => {
                     </main>
                 ) : (
                     <div style={{ backgroundColor: 'white', color: 'black', padding: '3rem 1rem', textAlign: 'center', borderRadius: '0.6rem' }}>
-                        No expense to show
+                        {t('noExpenseToShow')}
                     </div>
                 )}
                 {expenses.length > itemsPerPage && (
                     <div className="pagination">
                         <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-                            Previous
+                            {t('previous')}
                         </button>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <button key={index} onClick={() => handlePageChange(index + 1)} className={currentPage === index + 1 ? 'active' : ''}>
-                                {index + 1}
+                        {getSmartPagination(currentPage, totalPages).map((item, index) => (
+                            <button
+                                key={index}
+                                onClick={() => typeof item === 'number' && handlePageChange(item)}
+                                className={currentPage === item ? 'active' : ''}
+                                disabled={item === '...'}
+                            >
+                                {item}
                             </button>
                         ))}
                         <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-                            Next
+                            {t('next')}
                         </button>
+                        <div style={{ marginTop: '0rem', textAlign: 'center' }}>
+                            <input
+                                type="number"
+                                placeholder={t('enterPageNumber')}
+                                value={searchPage}
+                                onChange={(e) => setSearchPage(e.target.value)}
+                                style={{
+                                    padding: '0.5rem',
+                                    border: '1px solid #ccc',
+                                    borderRadius: '5px',
+                                    marginRight: '0.5rem',
+                                }}
+                            />
+                            <button onClick={handleSearchPage} style={{ padding: '0.5rem 1rem', borderRadius: '5px', backgroundColor: '#007bff', color: 'white' }}>
+                                {t('go')}
+                            </button>
+                        </div>
                     </div>
                 )}
             </section>
             <section className='top-expense-graph'>
-            <h2>Top Expenses</h2>
-            {data.length > 0 ? (
-                <div className="bar-chart-container">
-                    <ResponsiveContainer width="90%" height={250}>
-                        <BarChart data={data} layout="vertical" margin={{ top: 20, right:0, left: 60, bottom: 5 }}>
-                            <CartesianGrid stroke="none" />
-                            <XAxis type="number" dataKey="amount" stroke="black" />
-                            <YAxis type="category" dataKey="name" stroke="black" />
-                            <Tooltip content={<CustomTooltip />} />
-                            <Bar dataKey="amount" fill="#8884d8" barSize={20}>
-                                {data.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
-                                ))}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-            ) : (
-                <div style={{ backgroundColor: 'white', color: 'black', padding: ' 2rem 1rem', textAlign: 'center', borderRadius: '0.6rem' }}>
-                    No expense data available
-                </div>
-            )}
+                <h2>{t('topExpenses')}</h2>
+                {data.length > 0 ? (
+                    <div className="bar-chart-container">
+                        <ResponsiveContainer width="90%" height={250}>
+                            <BarChart data={data} layout="vertical" margin={{ top: 20, right: 0, left: 60, bottom: 5 }}>
+                                <CartesianGrid stroke="none" />
+                                <XAxis type="number" dataKey="amount" stroke="black" />
+                                <YAxis type="category" dataKey="name" stroke="black" tickFormatter={(name) => t(name)} />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Bar dataKey="amount" fill="#8884d8" barSize={20}>
+                                    {data.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                ) : (
+                    <div style={{ backgroundColor: 'white', color: 'black', padding: ' 2rem 1rem', textAlign: 'center', borderRadius: '0.6rem' }}>
+                        {t('noExpenseDataAvailable')}
+                    </div>
+                )}
             </section>
         </Fragment>
     );

@@ -2,9 +2,13 @@ import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
 import { ExpenseContext } from '../context/ContextAPI';
 import { toast, ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import 'react-toastify/dist/ReactToastify.css';
 
 const AddAmt = () => {
+    const { t, i18n } = useTranslation();
+    const currencySymbol = i18n.language === 'ta' ? '₹' : '$'; // Example: Change based on language
+
     const {
         walletBalance, totalExpenses, expenses, addIncome, addExpense, updateExpense,
         showIncomeModal, showExpenseModal, handleOpenIncomeModal, handleCloseIncomeModal,
@@ -157,13 +161,13 @@ const AddAmt = () => {
         <Fragment>
            <section className='bothAmt'>   
                 <aside className='data-feed addAmt'>
-                    <p style={{color:"blue"}}>Wallet Balance: <strong>&#8377;{walletBalance}</strong></p>
-                    <button className='amt-btn btn-add' onClick={handleOpenIncomeModal}>Add Income</button>
+                    <p style={{color:"blue"}}>{t('walletBalance')}: <strong>{currencySymbol}{walletBalance}</strong></p>
+                    <button className='amt-btn btn-add' onClick={handleOpenIncomeModal}>{t('addIncome')}</button>
                 </aside>
 
                 <aside className='data-feed addExpense'>
-                    <p style={{color:"red"}}>Expense: <strong>&#8377;{totalExpenses}</strong></p>
-                    <button className='amt-btn btn-exp' onClick={handleOpenExpenseModal}>Add Expense</button>
+                    <p style={{color:"red"}}>{t('expense')}: <strong>{currencySymbol}{totalExpenses}</strong></p>
+                    <button className='amt-btn btn-exp' onClick={handleOpenExpenseModal}>{t('addExpense')}</button>
                 </aside>
            </section>
 
@@ -253,7 +257,7 @@ const AddAmt = () => {
                             <Cell key={`cell-${index}`} fill={COLORS[entry.name]} stroke="none" strokeWidth={0} />
                         ))}
                     </Pie>
-                    <Legend verticalAlign="bottom" />
+                    <Legend verticalAlign="bottom" formatter={(value) => t(value)} />
                 </PieChart>
             </div>
             <ToastContainer />
