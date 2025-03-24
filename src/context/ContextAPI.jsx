@@ -42,12 +42,14 @@ export const ExpenseProvider = ({ children }) => {
     };
 
     const updateExpense = (updatedExpense) => {
+        const previousExpense = expenses.find(expense => expense.id === updatedExpense.id);
         const updatedExpenses = expenses.map(expense =>
             expense.id === updatedExpense.id ? updatedExpense : expense
         );
         setExpenses(updatedExpenses);
         setTotalExpenses(updatedExpenses.reduce((acc, expense) => acc + expense.amount, 0));
-        setWalletBalance(5000 - updatedExpenses.reduce((acc, expense) => acc + expense.amount, 0));
+        const balanceAdjustment = updatedExpense.amount - previousExpense.amount;
+        setWalletBalance(walletBalance - balanceAdjustment);
     };
 
     const deleteExpense = (expenseId) => {
@@ -66,11 +68,16 @@ export const ExpenseProvider = ({ children }) => {
     };
 
     const handleOpenExpenseModal = () => {
-        if (walletBalance > 0) {
+        if (walletBalance > 0 || editingExpense) {
             setShowExpenseModal(true);
         } else {
             alert("You can't add expenses when the wallet balance is 0.");
         }
+    };
+
+    const handleEditExpenseModal = (expense) => {
+        setEditingExpense(expense);
+        setShowExpenseModal(true);
     };
 
     const handleCloseExpenseModal = () => {
@@ -82,7 +89,8 @@ export const ExpenseProvider = ({ children }) => {
         <ExpenseContext.Provider value={{
             walletBalance, totalExpenses, expenses, addIncome, addExpense, updateExpense, deleteExpense,
             showIncomeModal, showExpenseModal, handleOpenIncomeModal, handleCloseIncomeModal,
-            handleOpenExpenseModal, handleCloseExpenseModal, editingExpense, setEditingExpense
+            handleOpenExpenseModal, handleCloseExpenseModal, editingExpense, setEditingExpense,
+            handleEditExpenseModal
         }}>
             {children}
         </ExpenseContext.Provider>

@@ -5,10 +5,7 @@
 }
 /* Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass */
 body{
-    /* background-color: #3b3b3b; */
-    background: #0f0c29; 
-    background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29); 
-    background: linear-gradient(to right, #24243e, #302b63, #0f0c29); 
+    background-color: #2c3e50;
       font-family: Ubuntu, sans-serif;
     color: white;
     padding: 0rem 1rem;
@@ -22,7 +19,6 @@ h2{
 }
 .expense-data{
     /* background-color:#10103a ; */
-    
     height: 45vh;
     width: 96vw;
     display: flex;
@@ -34,13 +30,13 @@ h2{
 .bothAmt{
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-evenly;
     width: 70%;
     height: 100%;
     /* border: #fefefe 2px solid; */
 }
 .data-feed{
-    height: 65%;
+    height: 60%;
     width: 42%;
     /* border: 2px saddlebrown solid; */
     display: flex;
@@ -49,12 +45,14 @@ h2{
     justify-content: space-evenly;
     /* gap: 1rem; */
     border-radius: 1rem;
-background: -webkit-linear-gradient(to right, #243B55, #141E30);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    /* background: #606c88;  
+    background: -webkit-linear-gradient(to bottom, #3f4c6b, #606c88); 
+    background: linear-gradient(to bottom, #3f4c6b, #606c88);  */
+    background: #bdc3c7;
+    color: black;
 }
 .data-feed p{
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     /* margin-top:2rem ; */
 }
 .data-feed p>strong{
@@ -100,9 +98,10 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 1rem;
-    /* border: 1px solid #888; */
+    border: 1px solid #888;
     width: 20rem; /* Could be more or less, depending on screen size */
     border-radius: 1rem;
+    /* border: 2px #000 solid; */
 }
 
 .close {
@@ -171,7 +170,7 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
     /* height: 300px; */
     /* border: green solid 3px; */
     width: auto;
-    top: 1rem;
+    top: -1rem;
 }
 
 .recharts-pie-sector {
@@ -185,7 +184,7 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
 .recharts-legend-wrapper {
     position: absolute;
     top:14rem;
-    width: 20rem;
+    width: 2rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -217,8 +216,8 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
 }
 
 .top-expense-data{
- /* border: #fefefe 2px solid; */
-    height: 50vh;
+    /* border: #fefefe 2px solid; */
+    height: 45vh;
     width: 96vw;
     display: flex;
     gap: 1rem;
@@ -232,11 +231,10 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
     width: 40%;
     height: 100%;
     /* border: 2px rgb(139, 19, 19) solid; */
-    
 }
 .bar-chart-container{
     width: 100%;
-    height: 85%;
+    height: auto;
     /* border: 6px rgb(19, 99, 139) solid; */
     outline: none;
     background-color: #fff;
@@ -315,7 +313,7 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
 .ExpEditDel {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.5rem;
     /* border: rgb(248, 93, 15) 2px solid; */
 }
 .ExpEditDel b{
@@ -334,8 +332,9 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
 .pagination {
     display: flex;
     justify-content: center;
-    gap: 5px;
+    gap: 0.5rem;
     margin-top: 10px;
+    /* border: red 3px solid ; */
 }
 
 .pagination button {
@@ -345,6 +344,7 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
     background-color: #f0f0f0;
     cursor: pointer;
     border-radius: 5px;
+    /* margin-top: 0.5rem; */
 }
 
 .pagination button.active {
@@ -359,26 +359,27 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
 
 @media screen and (min-width:768px) and (max-width:971px) {
 
-    
 .expense-data{
-    background-color:#626262 ;
-    height: 80vh;
+    height: 65vh;
     width: 96vw;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0rem;
     justify-content: space-around;
     border-radius: 1rem;
+    /* border: #007bff 4px solid; */
+    margin-bottom: 2.5rem;
 }
 .bothAmt{
     display: flex;
     align-items: center;
     justify-content: center;
     justify-content: center;
-    padding: 1rem;
+    padding: 1rem 0rem;
     gap: 2rem;
     width: 100%;
-    height: 50%;
+    height: 45%;
     /* border: #fefefe 2px solid; */
 }
 .data-feed{
@@ -386,19 +387,42 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
     width: 45%;
 }
 
+.data-feed p{
+    font-size: 1.6rem;
+    /* border: #000 2px solid; */
+}
 .chart-container {
     width: 100%;
-    height: 50%;
+    height: 55%;
     display: flex;
     align-items: center;
     justify-content: center;
     /* border: 2px saddlebrown solid; */
     outline: none;
 }
+.chart-container .recharts-wrapper {
+    width: 100%; /* Increased width */
+    height: 100%; /* Increased height */
+    /* border: 8px green solid; */
+    top: 0rem;
+   
+}
+.recharts-legend-wrapper {
+    top:14.5rem;
+    /* border: #000 2px solid; */
+    /* display: flex; */
+}
+.recharts-pie {
+    /* border: 5px rgb(25, 19, 139) solid; */
+    transform: scale(1); /* Scale up the pie chart */
+    margin-bottom: 1rem;
+}
 .top-expense-data {
     flex-direction: column;
     height: auto;
     width: 100%;
+    gap: 2rem;
+    margin-bottom: 2rem;
     /* border: #007bff 4px solid; */
 }
 .top-expense-graph, .recent-expenses {
@@ -408,16 +432,15 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
 
 }
 
-
-
-
-
-@media screen and (min-width:370px) and (max-width:768px) {
+@media screen and (min-width:350px) and (max-width:768px) {
     .expense-data{
         flex-direction: column;
-        height: 110vh;
+        height: 90vh;
         width: 94vw;
-        padding: 1rem;
+        /* padding: 1rem; */
+        gap: 0rem;
+        margin-bottom: 1rem;
+        /* border: #007bff 2px solid; */
     }
     .bothAmt{
         display: flex;
@@ -425,13 +448,14 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
         flex-direction: column;
         justify-content: space-around;
         width: 100%;
-        height: 70%;
+        height: 50%;
         gap: 1rem;
         /* border: #fefefe 2px solid; */
     }
     .data-feed{
         width: 100%;
         height: 50%;
+        /* border: #f00f0f 5px solid; */
     }
     .data-feed p{
         font-size: 1.6rem;
@@ -442,7 +466,10 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
     }
     .chart-container {
         width: 100%;
-        height:40%;
+        height:50%;
+        align-items: center;
+        /* border: 2px saddlebrown solid; */
+        /* margin-bottom: 1rem; */
     }
     .modal-content {
         width: 20rem; 
@@ -452,11 +479,20 @@ background: linear-gradient(to right, #0b3f7a, #081c41); /* W3C, IE 10+/ Edge, F
         height: auto;
         width: 100%;
         margin-bottom: 2rem;
+        gap: 2rem;
         /* border: #ff0008 4px solid; */
     }
     .top-expense-graph, .recent-expenses {
         width: 100%;
         height: auto;
     }
-
+    .chart-container .recharts-wrapper {
+        width: 100%; /* Increased width */
+        height: 100%; /* Increased height */
+        /* border: 8px green solid; */
+       
+    }
+    .recharts-legend-wrapper {
+        top:15rem;
+    }
 }

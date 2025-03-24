@@ -1,6 +1,8 @@
 import React, { useState, Fragment, useContext, useEffect } from 'react';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
 import { ExpenseContext } from '../context/ContextAPI';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddAmt = () => {
     const {
@@ -47,26 +49,39 @@ const AddAmt = () => {
             return;
         }
         const expenseAmt = parseInt(expenseAmount);
-        if (expenseAmt > walletBalance) {
-            setError("You can't add an expense greater than the wallet balance.");
+        const currentDate = new Date();
+        const expenseDateObj = new Date(expenseDate);
+        const threeDaysAgo = new Date();
+        threeDaysAgo.setDate(currentDate.getDate() - 3);
+
+        if (expenseDateObj > currentDate || expenseDateObj < threeDaysAgo) {
+            toast.error("You can only add expenses for today or the past three days.");
             return;
         }
-        const currentYear = new Date().getFullYear();
-        const expenseYear = new Date(expenseDate).getFullYear();
-        if (expenseYear !== currentYear) {
-            setError(`Please enter a date in the current year (${currentYear}).`);
-            return;
-        }
+
         const newExpense = {
             title: expenseTitle,
             amount: expenseAmt,
             category: expenseCategory,
             date: expenseDate
         };
+
+        let newWalletBalance = walletBalance;
         if (editingExpense) {
+            const previousAmount = editingExpense.amount;
+            if (expenseAmt > previousAmount && (expenseAmt - previousAmount) > walletBalance) {
+                toast.error("You can't increase the expense amount beyond the available wallet balance.");
+                return;
+            }
             updateExpense({ ...newExpense, id: editingExpense.id });
+            newWalletBalance -= (expenseAmt - previousAmount);
         } else {
+            if (expenseAmt > walletBalance) {
+                toast.error("You can't add an expense greater than the wallet balance.");
+                return;
+            }
             addExpense(newExpense);
+            newWalletBalance -= expenseAmt;
         }
         setExpenseTitle('');
         setExpenseAmount('');
@@ -74,6 +89,14 @@ const AddAmt = () => {
         setExpenseDate('');
         setError('');
         handleCloseExpenseModal();
+
+        if (newWalletBalance === 0) {
+            toast.warn("Warning: You have spent your entire wallet balance.");
+        } else if (newWalletBalance < 1000) {
+            toast.warn(`Warning: Your wallet balance is less than ₹1000. Current balance: ₹${newWalletBalance}`);
+        } else if (totalExpenses + expenseAmt < 1000) {
+            toast.warn(`Warning: Your total expenses are less than ₹1000. Current total expenses: ₹${totalExpenses + expenseAmt}`);
+        }
     };
 
     const handleInputChange = (e) => {
@@ -101,8 +124,9 @@ const AddAmt = () => {
         bills: '#606c88',
         entertainment: '#56CCF2',
         transport: '#FDC830',
-        others: '#302b63',
-        lifestyle: '#00FF00' 
+        '(U,G,S,O)': 'blue', 
+        healthcare: '#8A2BE2',
+        education: '#FFD700'
     };
 
     const data = expenses.reduce((acc, expense) => {
@@ -133,12 +157,12 @@ const AddAmt = () => {
         <Fragment>
            <section className='bothAmt'>   
                 <aside className='data-feed addAmt'>
-                    <p>Wallet Balance: <strong>&#8377;{walletBalance}</strong></p>
+                    <p style={{color:"blue"}}>Wallet Balance: <strong>&#8377;{walletBalance}</strong></p>
                     <button className='amt-btn btn-add' onClick={handleOpenIncomeModal}>Add Income</button>
                 </aside>
 
                 <aside className='data-feed addExpense'>
-                    <p>Expense: <strong>&#8377;{totalExpenses}</strong></p>
+                    <p style={{color:"red"}}>Expense: <strong>&#8377;{totalExpenses}</strong></p>
                     <button className='amt-btn btn-exp' onClick={handleOpenExpenseModal}>Add Expense</button>
                 </aside>
            </section>
@@ -186,13 +210,14 @@ const AddAmt = () => {
                         value={expenseCategory} 
                         onChange={handleExpenseCategoryChange}
                     >
-                      <option value="select_category">Select Category</option>
+                        <option value="select_category">Select Category</option>
                         <option value="food">Food</option>
-                       <option value="bills">Bills</option> 
-                       <option value="entertainment">Entertainment</option>
+                        <option value="bills">Bills</option> 
+                        <option value="entertainment">Entertainment</option>
                         <option value="transport">Transport</option>
-                        <option value="lifestyle">LifeStyle</option>
-                        <option value="others">Others</option>
+                        <option value="(U,G,S,O)">(U,G,S,O)</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="education">Education</option>
                     </select>
                     <input 
                         type="date" 
@@ -208,7 +233,7 @@ const AddAmt = () => {
             </div>
 
             <div className="chart-container">
-                <PieChart width={300} height={300}>
+                <PieChart width={280} height={280}>
                     <Pie
                         data={data}
                         cx="50%"
@@ -229,7 +254,7 @@ const AddAmt = () => {
                     <Legend verticalAlign="bottom" />
                 </PieChart>
             </div>
-            
+            <ToastContainer />
         </Fragment>
     );
 };

@@ -1,11 +1,10 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { ExpenseContext } from '../context/ContextAPI';
-import { FaUtensils, FaReceipt, FaFilm, FaCar, FaQuestion, FaTools, FaEdit, FaTrash } from 'react-icons/fa';
-import { FaChildReaching } from 'react-icons/fa6';
+import { FaUtensils, FaReceipt, FaFilm, FaCar, FaQuestion, FaTools, FaEdit, FaTrash, FaHeartbeat, FaBook } from 'react-icons/fa';
 
 const TopExpData = () => {
-    const { expenses, deleteExpense, handleOpenExpenseModal, setEditingExpense } = useContext(ExpenseContext);
+    const { expenses, deleteExpense, handleEditExpenseModal } = useContext(ExpenseContext);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
 
@@ -17,21 +16,22 @@ const TopExpData = () => {
             acc.push({ name: expense.category, amount: expense.amount });
         }
         return acc;
-    }, []);
+    }, []).sort((a, b) => b.amount - a.amount);
 
     const COLORS = {
         food: '#ED213A',
         bills: '#606c88',
         entertainment: '#56CCF2',
         transport: '#FDC830',
-        others: '#302b63',
-        lifestyle: '#00FF00' 
+        '(U,G,S,O)': 'blue', 
+        healthcare: '#8A2BE2',
+        education: '#FFD700'
     };
 
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="custom-tooltip">
+                <div className="custom-tooltip" style={{ backgroundColor: 'white', color: 'black', padding: '5px', borderRadius: '5px' }}>
                     <p className="label">{`${payload[0].payload.name} : ₹${payload[0].payload.amount}`}</p>
                 </div>
             );
@@ -44,7 +44,20 @@ const TopExpData = () => {
     };
 
     const totalPages = Math.ceil(expenses.length / itemsPerPage);
-    const currentExpenses = expenses.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const currentExpenses = expenses
+        .sort((a, b) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            const today = new Date().setHours(0, 0, 0, 0);
+            if (dateA.setHours(0, 0, 0, 0) === today && dateB.setHours(0, 0, 0, 0) !== today) {
+                return -1;
+            }
+            if (dateA.setHours(0, 0, 0, 0) !== today && dateB.setHours(0, 0, 0, 0) === today) {
+                return 1;
+            }
+            return dateB - dateA;
+        })
+        .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const getCategoryIcon = (category) => {
         switch (category) {
@@ -56,18 +69,19 @@ const TopExpData = () => {
                 return <FaFilm color={COLORS.entertainment} />;
             case 'transport':
                 return <FaCar color={COLORS.transport} />;
-            case 'others':
-                return <FaTools color={COLORS.others} />;
-            case 'lifestyle':
-                return <FaChildReaching color={COLORS.lifestyle} />;
+            case '(U,G,S,O)':
+                return <FaTools color={COLORS['(U,G,S,O)']} />;
+            case 'healthcare':
+                return <FaHeartbeat color={COLORS.healthcare} />;
+            case 'education':
+                return <FaBook color={COLORS.education} />;
             default:
                 return <FaQuestion color='#000' />;
         }
     };
 
     const handleEdit = (expense) => {
-        setEditingExpense(expense);
-        handleOpenExpenseModal();
+        handleEditExpenseModal(expense);
     };
 
     const handleDelete = (expenseId) => {
