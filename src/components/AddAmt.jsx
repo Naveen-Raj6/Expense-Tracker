@@ -27,7 +27,7 @@ const AddAmt = () => {
         } else {
             setExpenseTitle('');
             setExpenseAmount('');
-            setExpenseCategory('food');
+            setExpenseCategory('select_category'); // Set default value to 'select_category'
             setExpenseDate('');
         }
     }, [editingExpense]);
@@ -209,6 +209,7 @@ const AddAmt = () => {
                         className="modal-input" 
                         value={expenseCategory} 
                         onChange={handleExpenseCategoryChange}
+                        style={{ backgroundColor: 'white', color: 'black' }}
                     >
                         <option value="select_category">Select Category</option>
                         <option value="food">Food</option>
@@ -224,6 +225,7 @@ const AddAmt = () => {
                         className="modal-input" 
                         value={expenseDate} 
                         onChange={handleExpenseDateChange} 
+                        style={{ backgroundColor: 'white', color: 'black' }}
                     />
                     <div className="modal-buttons">
                         <button className="modal-button add" onClick={handleAddExpense}>{editingExpense ? 'Update Expense' : 'Add Expense'}</button>
